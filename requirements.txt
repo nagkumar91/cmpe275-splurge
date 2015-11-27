@@ -1,7 +1,1 @@
-django
-psycopg2
-Pillow==2.9.0
-python-dateutil
-twilio
-requests
-requests-oauthlib
+-r requirements/base.txt
