@@ -37,6 +37,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'djcelery',
     'core',
 )
 
@@ -106,3 +107,15 @@ AUTH_USER_MODEL = 'core.AppUser'
 LOGIN_REDIRECT_URL = '/home/'
 LOGIN_URL = '/login/'
 LOGOUT_URL = '/logout/'
+
+import djcelery
+from celery.schedules import crontab
+djcelery.setup_loader()
+
+BROKER_URL = "amqp://admin:admin@localhost:5672/default"
+CELERY_RESULT_BACKEND='djcelery.backends.database:DatabaseBackend'
+CELERY_BEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
+CELERY_TIMEZONE = 'America/Los_Angeles'
+
+SITE_URL = 'http://localhost:8000'
+

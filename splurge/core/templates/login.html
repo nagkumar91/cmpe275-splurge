@@ -46,8 +46,8 @@
 {% block content %}
     <div class="container">
         <div class="row">
-            {% if success %}
-                <h4>You signed up successfully! Login to continue.</h4>
+            {% if errors %}
+                <h4 style="color: red">{{ error }}</h4>
             {% endif %}
             <div class="col-md-offset-5 col-md-3 col-lg-offset-5 col-lg-3">
                 <form action="{% url 'login' %}" method="post">

@@ -5,3 +5,5 @@ python-dateutil
 twilio
 requests
 requests-oauthlib
+celery
+django-celery
