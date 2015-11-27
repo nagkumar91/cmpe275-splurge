@@ -1,0 +1,182 @@
+{% extends 'base.html' %}
+{% block extra_css %}
+    <style>
+        label.valid {
+            width: 24px;
+            height: 24px;
+            display: inline-block;
+            text-indent: -9999px;
+        }
+
+        label.error {
+            font-weight: bold;
+            color: rgba(255, 21, 21, 0.91);
+            padding: 0px 14px;
+            margin-top: -1px;
+            position: absolute;
+        }
+
+
+        .form-control {
+            display: block;
+            width: 100%;
+            height: 38px;
+            padding: 0px 14px;
+            font-size: 14px;
+            line-height: 1.428571;
+            background-color: rgba(255, 255, 255, 0);
+            background-image: none;
+            border: 1px solid rgba(255, 244, 244, 0.58);
+            border-radius: 9px;
+            -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+            -webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
+            -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+            transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+            margin: 3px;
+        }
+
+        /* all */
+        ::-webkit-input-placeholder {
+            color: #f00;
+        }
+
+        ::-moz-placeholder {
+            color: #f00;
+        }
+
+        /* firefox 19+ */
+        :-ms-input-placeholder {
+            color: #f00;
+        }
+
+        /* ie */
+        input:-moz-placeholder {
+            color: #f00;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="container">
+            <form class="form-horizontal" id="register" name="register" method="post">
+                <fieldset>
+
+                    <!-- Form Name -->
+                    <h3 align="center">Signup</h3>
+
+                    <!-- Text input-->
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="firstname">First Name</label>
+
+                        <div class="col-md-6">
+                            <input id="firstname" name="firstname" type="text" placeholder="First Name"
+                                   class="form-control input-md">
+                        </div>
+                    </div>
+
+                    <!-- Text input-->
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="lastname">Last Name</label>
+
+                        <div class="col-md-6">
+                            <input id="lastname" name="lastname" type="text" placeholder="Last Name"
+                                   class="form-control input-md">
+                        </div>
+                    </div>
+
+                    <!-- Text input-->
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="email">Email ID</label>
+
+                        <div class="col-md-6">
+                            <input id="email" name="email" type="email" placeholder="Email ID"
+                                   class="form-control input-md">
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="organisation">Organisation</label>
+
+                        <div class="col-md-6">
+                            <input id="organisation" name="organisation" type="text" placeholder="Organisation"
+                                   class="form-control input-md">
+                        </div>
+                    </div>
+
+                    <!-- Password input-->
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="password">Password</label>
+
+                        <div class="col-md-6">
+                            <input id="password" name="password" type="password" placeholder="Password"
+                                   class="form-control input-md">
+                        </div>
+                    </div>
+                    {% csrf_token %}
+                    <!-- Button (Double) -->
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="submit"></label>
+
+                        <div class="col-md-8" style="margin-top: 5%">
+                            <button id="submit" name="submit" class="btn btn-success">Register</button>
+                            <button id="reset" name="reset" type="reset" class="btn btn-danger">Reset</button>
+                            <a href="{% url 'login' %}" class="btn btn-primary">Login</a>
+                        </div>
+                    </div>
+
+                </fieldset>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+
+
+{% block extra_js %}
+    <script src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            $('#register').validate(
+                    {
+                        rules: {
+                            firstname: {
+                                minlength: 2,
+                                required: true
+                            },
+                            lastname: {
+                                required: true
+                            },
+                            password: {
+                                minlength: 2,
+                                required: true
+                            },
+                            email:  {
+                                required: true
+                            }
+                        },
+                        messages: {
+                            firstname: "Please enter your first name",
+                            lastname: "Please enter your last name",
+                            password: {
+                                required: "Please provide a password",
+                                minlength: "Your password must be at least 5 characters long"
+                            },
+                            email: "Please enter a valid email ID!"
+
+                        },
+                        highlight: function (element) {
+                            $(element).closest('.form-group').removeClass('success').addClass('error');
+                        },
+                        success: function (element) {
+                            element
+                                    .text('OK!').addClass('valid')
+                                    .closest('.form-group').removeClass('error').addClass('success');
+                        }
+                    });
+        }); // end document.ready
+    </script>
+{% endblock %}

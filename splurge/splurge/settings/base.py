@@ -102,3 +102,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 AUTH_USER_MODEL = 'core.AppUser'
+
+LOGIN_REDIRECT_URL = '/home/'
+LOGIN_URL = '/login/'
+LOGOUT_URL = '/logout/'

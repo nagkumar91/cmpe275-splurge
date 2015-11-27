@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% block extra_css %}
+    <style>
+        @import url(http://fonts.googleapis.com/css?family=Roboto:400);
+
+        body {
+            background-color: #fff;
+            -webkit-font-smoothing: antialiased;
+            font: normal 14px Roboto, arial, sans-serif;
+        }
+
+        .container {
+            padding: 25px;
+            position: fixed;
+        }
+
+        .form-login {
+            background-color: #EDEDED;
+            padding-top: 10px;
+            padding-bottom: 20px;
+            padding-left: 20px;
+            padding-right: 20px;
+            border-radius: 15px;
+            border-color: #d2d2d2;
+            border-width: 5px;
+            box-shadow: 0 1px 0 #cfcfcf;
+        }
+
+        h4 {
+            border: 0 solid #fff;
+            border-bottom-width: 1px;
+            padding-bottom: 10px;
+            text-align: center;
+        }
+
+        .form-control {
+            border-radius: 10px;
+        }
+
+        .wrapper {
+            text-align: center;
+        }
+
+    </style>
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="row">
+            {% if success %}
+                <h4>You signed up successfully! Login to continue.</h4>
+            {% endif %}
+            <div class="col-md-offset-5 col-md-3 col-lg-offset-5 col-lg-3">
+                <form action="{% url 'login' %}" method="post">
+                    <div class="form-login">
+                        <h4>Welcome back.</h4>
+                        <input type="text" name="userName" id="userName" class="form-control input-sm chat-input" placeholder="Email ID" required/>
+                        </br>
+                        <input type="password" name="password" id="userPassword" class="form-control input-sm chat-input" placeholder="password" required/>
+                        </br>
+                        {% csrf_token %}
+                        <div class="wrapper">
+                        <span class="group-btn">
+                            <input type="submit" class="btn btn-primary btn-md" value="login">
+                            <a href="{% url 'signup' %}" class="btn btn-success btn-md">Signup <i class="fa fa-sign-in"></i></a>
+                        </span>
+                        </div>
+                    </div>
+                </form>
+
+
+            </div>
+        </div>
+</div>
+{% endblock %}
