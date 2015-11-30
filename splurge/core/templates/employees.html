@@ -1,0 +1,31 @@
+{% extends 'layout.html' %}
+
+{% block employees-active %}active{% endblock %}
+{% block custom-container %}
+    <div class="row">
+        <a href="{% url 'add_employee' %}" class="btn btn-primary">Add Employee</a>
+    </div>
+    {% if employees %}
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Employee Name</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for e in employees %}
+            <tr>
+                <td>{{ e.first_name }} {{ e.last_name }}</td>
+                <td>
+                    <a href="{% url 'create_card_for_employee' e.pk %}" class="btn btn-primary">Create Card</a>
+                    <a href="{% url 'delete_employee' e.pk %}" class="btn btn-danger">Delete Employee</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <h4>You do not have any teams currently. Click on the create team button to create a team!</h4>
+    {% endif %}
+{% endblock %}

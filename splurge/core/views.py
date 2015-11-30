@@ -4,7 +4,7 @@ from django.shortcuts import render, render_to_response, redirect
 from django.template import RequestContext
 from django.contrib.auth import login as auth_login, authenticate
 
-from .models import AppUser
+from .models import AppUser, Employee
 from .tasks import activation_mail_queue
 
 
@@ -80,3 +80,58 @@ def activate_user(request, unique_id):
         }))
     except ObjectDoesNotExist:
         return render_to_response("error.html", RequestContext(request))
+
+
+@login_required
+def teams(request):
+    team = request.user.teams.all()
+    return render_to_response("teams.html", RequestContext(request, {
+        "teams": team
+    }))
+
+
+@login_required
+def employees(request):
+    employee = request.user.employees.all()
+    return render_to_response("employees.html", RequestContext(request, {
+        "employees": employee
+    }))
+
+
+@login_required
+def create_team(request):
+    pass
+
+
+@login_required
+def add_employee(request):
+    if request.method == 'GET':
+        return render_to_response("add_employee.html", RequestContext(request, {
+
+        }))
+    else:
+        print request.POST
+        e = Employee(
+            first_name=request.POST.get("firstName"),
+            last_name=request.POST.get("lastName"),
+            email_id=request.POST.get("emailID"),
+            phone_number=request.POST.get("phoneNumber"),
+            app_user=request.user
+        )
+        e.save()
+        return redirect('employees')
+
+
+@login_required
+def delete_employee(request, employee_id):
+    pass
+
+
+@login_required
+def create_card_for_employee(request, employee_id):
+    pass
+
+
+@login_required
+def create_card_for_team(request, team_id):
+    pass

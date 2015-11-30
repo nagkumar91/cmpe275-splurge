@@ -26,6 +26,7 @@ class Employee(TimeStampedModel):
     email_id = models.EmailField()
     phone_number = models.CharField(max_length=15)
     app_user = models.ForeignKey(AppUser, related_name='employees')
+    team = models.ForeignKey('Team', related_name='employees', null=True, blank=True)
 
     class Meta:
         verbose_name = 'Employee'

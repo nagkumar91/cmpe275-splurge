@@ -45,4 +45,9 @@ class Migration(migrations.Migration):
                 'verbose_name_plural': 'Teams',
             },
         ),
+        migrations.AddField(
+            model_name='employee',
+            name='team',
+            field=models.ForeignKey(related_name='employees', to='core.Team'),
+        ),
     ]

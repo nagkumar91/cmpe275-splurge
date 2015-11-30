@@ -1,0 +1,53 @@
+{% extends 'layout.html' %}
+{% block employees-active %}active{% endblock %}
+{% block custom-container %}
+    <form action="{% url 'add_employee' %}" method="post">
+        {% csrf_token %}
+        <fieldset>
+
+            <!-- Form Name -->
+            <legend>Add Employee</legend>
+
+            <!-- Text input-->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="firstName">First Name</label>
+                <div class="col-md-5">
+                    <input id="firstName" name="firstName" type="text" placeholder="First Name" class="form-control input-md" required="">
+
+                </div>
+            </div>
+
+            <!-- Text input-->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="lastName">Last Name</label>
+                <div class="col-md-5">
+                    <input id="lastName" name="lastName" type="text" placeholder="Last Name" class="form-control input-md" required="">
+
+                </div>
+            </div>
+
+            <!-- Text input-->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="emailID">Email ID</label>
+                <div class="col-md-5">
+                    <input id="emailID" name="emailID" type="text" placeholder="Email ID" class="form-control input-md" required="">
+
+                </div>
+            </div>
+
+            <!-- Text input-->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="phoneNumber">Mobile Number</label>
+                <div class="col-md-5">
+                    <input id="phoneNumber" name="phoneNumber" type="text" placeholder="Mobile Number" class="form-control input-md" required="">
+
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-5">
+                    <input type="submit" value="Submit" class="btn btn-success">
+                </div>
+            </div>
+        </fieldset>
+    </form>
+{% endblock %}

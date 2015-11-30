@@ -1,0 +1,28 @@
+{% extends 'layout.html' %}
+
+{% block teams-active %}active{% endblock %}
+{% block custom-container %}
+    <div class="row">
+        <a href="{% url 'create_team' %}" class="btn btn-primary">Create Team</a>
+    </div>
+    {% if team %}
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Team Name</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for t in team %}
+            <tr>
+                <td>{{ t.name }}</td>
+                <td><a href="{% url 'create_card_for_team' t.pk %}" class="btn btn-primary">Create Card</a></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <h4>You do not have any teams currently. Click on the create team button to create a team!</h4>
+    {% endif %}
+{% endblock %}
