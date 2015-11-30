@@ -5,7 +5,7 @@
     <div class="row">
         <a href="{% url 'create_team' %}" class="btn btn-primary">Create Team</a>
     </div>
-    {% if team %}
+    {% if teams %}
     <table class="table table-striped">
         <thead>
         <tr>
@@ -14,7 +14,7 @@
         </tr>
         </thead>
         <tbody>
-        {% for t in team %}
+        {% for t in teams %}
             <tr>
                 <td>{{ t.name }}</td>
                 <td><a href="{% url 'create_card_for_team' t.pk %}" class="btn btn-primary">Create Card</a></td>

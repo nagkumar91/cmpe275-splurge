@@ -3,8 +3,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render, render_to_response, redirect
 from django.template import RequestContext
 from django.contrib.auth import login as auth_login, authenticate
-
-from .models import AppUser, Employee
+from django.http.request import QueryDict
+from .models import AppUser, Employee, Team
 from .tasks import activation_mail_queue
 
 
@@ -101,7 +101,24 @@ def employees(request):
 
 @login_required
 def create_team(request):
-    pass
+    if request.method == 'GET':
+        employees = request.user.employees.all()
+        return render_to_response("add_team.html", RequestContext(request, {
+            "employees": employees
+        }))
+    else:
+        employees = request.POST.getlist("employees")
+        team_name = request.POST.get("teamName")
+        t = Team(
+            name=team_name,
+            app_user=request.user
+        )
+        t.save()
+        for e in employees:
+            emp_object = Employee.objects.get(pk=int(e))
+            emp_object.team = t
+            emp_object.save()
+        return redirect('teams')
 
 
 @login_required

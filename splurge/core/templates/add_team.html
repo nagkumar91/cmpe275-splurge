@@ -1,0 +1,50 @@
+{% extends 'layout.html' %}
+
+{% block teams-active %}active{% endblock %}
+{% block extra_css %}
+    <link href="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.1/css/select2.min.css" rel="stylesheet" />
+{% endblock %}
+{% block custom-container %}
+    {% if employees %}
+        <form action="{% url 'create_team' %}" method="post">
+            <fieldset>
+                <!-- Form Name -->
+                <legend>Add Team</legend>
+                <!-- Text input-->
+                <div class="row">
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="teamName">Team Name</label>
+                        <div class="col-md-5">
+                            <input id="teamName" name="teamName" type="text" placeholder="Team Name" class="form-control input-md" required="">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="employees">Employees</label>
+                        <div class="col-md-5">
+                            <select name="employees" id="employees" multiple="multiple" style="width: 100%;">
+                                <option></option>
+                                {% for e in employees %}
+                                    <option value="{{ e.pk }}">{{ e.first_name }} {{ e.last_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                {% csrf_token %}
+                <input type="submit" class="btn btn-primary" value="Submit">
+
+            </fieldset>
+        </form>
+    {% else %}
+        <h4>You do not have any employees to create a team.</h4>
+    {% endif %}
+{% endblock %}
+{% block extra_js %}
+    <script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.1/js/select2.min.js"></script>
+    <script>
+        $('#employees').select2({ tags: true, maximumSelectionSize: 5, dropdownAutoWidth : true});
+    </script>
+{% endblock %}
