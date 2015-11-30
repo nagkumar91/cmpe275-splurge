@@ -10,8 +10,9 @@ from .tasks import activation_mail_queue
 
 def home(request):
     if request.user.is_anonymous():
-        context_instance = RequestContext(request, {})
-        return render_to_response("home.html", context_instance)
+        return redirect('homepage')
+    else:
+        return render_to_response("home.html", RequestContext(request))
 
 
 def signup(request):
@@ -124,7 +125,10 @@ def add_employee(request):
 
 @login_required
 def delete_employee(request, employee_id):
-    pass
+    employee_id = int(employee_id)
+    e = Employee.objects.get(pk=employee_id)
+    e.delete()
+    return redirect('employees')
 
 
 @login_required
