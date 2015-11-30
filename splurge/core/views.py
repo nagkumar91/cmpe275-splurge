@@ -7,6 +7,7 @@ from django.contrib.auth import login as auth_login, authenticate
 from .models import AppUser
 from .tasks import activation_mail_queue
 
+
 def home(request):
     if request.user.is_anonymous():
         context_instance = RequestContext(request, {})
@@ -56,9 +57,9 @@ def login(request):
                     "error": "Please activate your account by clicking on the link."
                 }))
         return render_to_response("login.html", RequestContext(request, {
-                    "errors": True,
-                    "error": "Invalid Credentials!"
-                }))
+            "errors": True,
+            "error": "Invalid Credentials!"
+        }))
 
 
 @login_required

@@ -1,5 +1,7 @@
-{% extends 'base.html' %}
+{% extends 'layout.html' %}
 
-{% block content %}
-<h4>Welcome {{ user.first_name }}!</h4>
+{% block custom-container %}
+    <div class="row">
+        <h4>Welcome {{ user.first_name }}!</h4>
+    </div>
 {% endblock %}
