@@ -5,7 +5,7 @@ from django.template import RequestContext
 from django.contrib.auth import login as auth_login, authenticate
 from django.http.request import QueryDict
 
-from .models import AppUser, Employee, Team
+from .models import AppUser, Employee, Team, GiftCard
 from .tasks import activation_mail_queue
 
 
@@ -110,7 +110,22 @@ def cards(request):
 
 @login_required
 def send_card_to_employee(request):
-    pass
+    if request.method == 'GET':
+        employees = request.user.employees.all()
+        print employees
+        return render_to_response("add_card_to_employee.html", RequestContext(request, {
+            "employees": employees
+        }))
+    else:
+        employee = request.POST.get("employees")
+        amount = request.POST.get("amount")
+        gc = GiftCard(
+            amount=amount,
+            to=Employee.objects.get(pk=(int(employee))),
+            given_by=request.user
+        )
+        gc.save()
+        return redirect('cards')
 
 
 @login_required
