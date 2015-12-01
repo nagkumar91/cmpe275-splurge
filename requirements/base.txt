@@ -8,3 +8,4 @@ requests-oauthlib
 celery
 django-celery
 django-model-utils
+pytz
