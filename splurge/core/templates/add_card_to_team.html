@@ -1,0 +1,52 @@
+{% extends 'layout.html' %}
+
+{% block cards-active %}active{% endblock %}
+{% block extra_css %}
+    <link href="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.1/css/select2.min.css" rel="stylesheet" />
+{% endblock %}
+{% block custom-container %}
+    <div class="row">
+        <form class="form-horizontal" method="post" action="{% url 'send_card_to_a_team' %}">
+            <fieldset>
+                <!-- Form Name -->
+                <legend>Send Card to a Team</legend>
+                <div class="row">
+                    <!-- Prepended text-->
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="amount">Amount</label>
+                        <div class="col-md-5">
+                            <div class="input-group">
+                                <span class="input-group-addon">$</span>
+                                <input id="amount" name="amount" class="form-control" placeholder="amount" type="text" required="">
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                {% csrf_token %}
+                <div class="row">
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="teams">Teams</label>
+                        <div class="col-md-5">
+                            <select name="teams" id="teams" style="width: 100%;">
+                                <option></option>
+                                {% for t in teams %}
+                                    <option value="{{ t.pk }}">{{ t.name }} </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <input type="submit" class="btn btn-primary" value="Submit">
+            </fieldset>
+        </form>
+
+    </div>
+
+{% endblock %}
+{% block extra_js %}
+    <script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.1/js/select2.min.js"></script>
+    <script>
+        $('#teams').select2();
+    </script>
+{% endblock %}

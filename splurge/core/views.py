@@ -130,7 +130,24 @@ def send_card_to_employee(request):
 
 @login_required
 def send_card_to_a_team(request):
-    pass
+    if request.method == 'GET':
+        teams = request.user.teams.all()
+        print teams
+        return render_to_response("add_card_to_team.html", RequestContext(request, {
+            "teams": teams
+        }))
+    else:
+        team = request.POST.get("teams")
+        amount = request.POST.get("amount")
+        team_obj = Team.objects.get(pk=int(team))
+        for u in team_obj.employees.all():
+            gc = GiftCard(
+                amount=amount,
+                to=u,
+                given_by=request.user
+            )
+            gc.save()
+        return redirect('cards')
 
 
 @login_required
