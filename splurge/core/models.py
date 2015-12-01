@@ -1,3 +1,4 @@
+import datetime
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils.crypto import get_random_string
@@ -46,3 +47,25 @@ class Team(TimeStampedModel):
 
     def __unicode__(self):
         return "%s - %s" % (self.name, self.app_user.organisation_name)
+
+
+class GiftCard(TimeStampedModel):
+    amount = models.IntegerField(default=0)
+    given_by = models.ForeignKey(AppUser, related_name='gift_cards')
+    to = models.ForeignKey(Employee, related_name='gift_cards')
+    expired = models.BooleanField(default=False)
+    claimed = models.BooleanField(default=False)
+    expiry_timestamp = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        verbose_name = 'Gift Card'
+        verbose_name_plural = 'Gift Cards'
+
+    def __unicode__(self):
+        return "%s %s" % (self.amount, self.given_by)
+
+    def save(self, *args, **kwargs):
+        if not self.expired:
+            if not self.expiry_timestamp:
+                self.expiry_timestamp = self.created + datetime.timedelta(days=2)
+        super(GiftCard, self).save(*args, **kwargs)

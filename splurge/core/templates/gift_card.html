@@ -1,0 +1,46 @@
+{% extends 'layout.html' %}
+
+{% block cards-active %}active{% endblock %}
+{% block custom-container %}
+    <div class="row">
+        <div class="col-lg-6 col-md-6">
+            <a href="{% url 'send_card_to_employee' %}" class="btn btn-primary">Send Card to Employee</a>
+        </div>
+        <div class="col-lg-6 col-md-6">
+            <a href="{% url 'send_card_to_a_team' %}" class="btn btn-primary">Send Card to a team</a>
+        </div>
+
+    </div>
+    {% if gift_cards %}
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Employee Name</th>
+                <th>Status</th>
+                <th>Expires(d) on</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for gc in gift_cards %}
+                <tr>
+                    <td>{{ gc.to.first_name }} {{ gc.to.last_name }}</td>
+                    <td>
+                        {% if gc.expired %}
+                            Expired
+                        {% elif gc.claimed %}
+                            Claimed
+                        {% else %}
+                            Still Alive
+                        {% endif %}
+                    </td>
+                    <td>
+                        {{ gc.expiry_timestamp }}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <h4>You do not have any cards currently. Click on the buttons to send out cards!</h4>
+    {% endif %}
+{% endblock %}

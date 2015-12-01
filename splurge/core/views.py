@@ -4,6 +4,7 @@ from django.shortcuts import render, render_to_response, redirect
 from django.template import RequestContext
 from django.contrib.auth import login as auth_login, authenticate
 from django.http.request import QueryDict
+
 from .models import AppUser, Employee, Team
 from .tasks import activation_mail_queue
 
@@ -97,6 +98,24 @@ def employees(request):
     return render_to_response("employees.html", RequestContext(request, {
         "employees": employee
     }))
+
+
+@login_required
+def cards(request):
+    gift_cards = request.user.gift_cards.all()
+    return render_to_response("gift_card.html", RequestContext(request, {
+        "gift_cards": gift_cards
+    }))
+
+
+@login_required
+def send_card_to_employee(request):
+    pass
+
+
+@login_required
+def send_card_to_a_team(request):
+    pass
 
 
 @login_required

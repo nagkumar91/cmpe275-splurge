@@ -21,7 +21,9 @@
                         <li class="{% block employees-active %}{% endblock %}">
                             <a href="{% url 'employees' %}">Employees</a>
                         </li>
-                        <li class="{% block cards-active %}{% endblock %}"><a href="#">Cards</a></li>
+                        <li class="{% block cards-active %}{% endblock %}">
+                            <a href="{% url 'cards' %}">Cards</a>
+                        </li>
                         <li class="{% block payment-active %}{% endblock %}"><a href="#">Payment Methods</a></li>
                     </ul>
                 </div>
