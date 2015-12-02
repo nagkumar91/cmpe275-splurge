@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0, minimal-ui" id="viewport"/>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="UTF-8">
+    <title>Gift card redeemed</title>
+</head>
+<body>
+<div style="display: block">
+    <h4>Hello {{ appuser.first_name }}!</h4>
+</div>
+<div style="display: block;margin-top: 50px">
+    <h4>The gift card that you sent to {{ employee.first_name }} {{ employee.last_name }} has been redeemed.</h4>
+</div>
+<div style="display: block;margin-top: 50px">
+    <p>The splurge card is worth ${{ card.amount }} has been redeemed by your employee just now!</p>
+    <p>Thank you for using Splurge!</p>
+</div>
+</body>
+</html>

@@ -261,5 +261,6 @@ def email_preview(reqeust, template_name):
     return render_to_response(template_name, RequestContext(reqeust, {
         "employee": employee,
         "appuser": app_user,
-        "card": card
+        "card": card,
+        "returned_amount": (0.75*card.amount)
     }))
