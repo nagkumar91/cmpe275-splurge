@@ -218,4 +218,18 @@ def create_card_for_employee(request, employee_id):
 
 @login_required
 def create_card_for_team(request, team_id):
-    pass
+    team_obj = Team.objects.get(pk=int(team_id))
+    if request.method == 'GET':
+        return render_to_response("card_to_specific_team.html", RequestContext(request, {
+            "team": team_obj
+        }))
+    else:
+        amount = request.POST.get("amount")
+        for e in team_obj.employees.all():
+            gc = GiftCard(
+                amount=amount,
+                to=e,
+                given_by=request.user
+            )
+            gc.save()
+        return redirect('cards')
