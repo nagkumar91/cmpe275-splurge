@@ -281,3 +281,4 @@ def email_callback(request):
 @csrf_exempt
 def email_failure(request):
     print "email fail called"
+    return JsonResponse(json.dumps({"done": True}), content_type="application/json", safe=False)
