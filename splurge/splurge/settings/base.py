@@ -129,6 +129,6 @@ BROKER_URL = "amqp://admin:admin@localhost:5672/default"
 CELERY_RESULT_BACKEND='djcelery.backends.database:DatabaseBackend'
 CELERY_BEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
 CELERY_TIMEZONE = 'America/Los_Angeles'
-
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 SITE_URL = 'http://localhost:8000'
 
