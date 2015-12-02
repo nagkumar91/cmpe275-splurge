@@ -10,6 +10,7 @@ class AppUser(AbstractUser):
 
     organisation_name = models.CharField(max_length=255, null=True, blank=True)
     unique_code = models.CharField(max_length=255, null=True, blank=True)
+    balance = models.IntegerField(default=0)
 
     class Meta:
         verbose_name = 'App User'
