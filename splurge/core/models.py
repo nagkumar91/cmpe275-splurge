@@ -4,6 +4,8 @@ from django.db import models
 from django.utils.crypto import get_random_string
 from model_utils.models import TimeStampedModel
 
+from .tasks import gift_card
+
 
 class AppUser(AbstractUser):
     REQUIRED_FIELDS = ['email']
@@ -89,6 +91,9 @@ class GiftCard(TimeStampedModel):
         return "%s %s" % (self.amount, self.given_by)
 
     def save(self, *args, **kwargs):
+        if not self.email_notification:
+            gift_card.delay(self.given_by, self.to, self)
+            self.email_notification = True
         if not self.unique_code:
             self.unique_code = get_random_string(25)
 
