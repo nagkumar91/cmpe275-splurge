@@ -1,0 +1,39 @@
+{% extends 'layout.html' %}
+
+{% block cards-active %}active{% endblock %}
+{% block custom-container %}
+    <div class="row">
+        <form class="form-horizontal" method="post" action="{% url 'create_card_for_employee' employee.pk %}">
+            <fieldset>
+                <!-- Form Name -->
+                <legend>Send Card to Employee</legend>
+                <div class="row">
+                    <!-- Prepended text-->
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="amount">Amount</label>
+                        <div class="col-md-5">
+                            <div class="input-group">
+                                <span class="input-group-addon">$</span>
+                                <input id="amount" name="amount" class="form-control" placeholder="amount" type="text" required="">
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                {% csrf_token %}
+                <div class="row">
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="employees">Employees</label>
+                        <div class="col-md-5">
+                            <input type="text" class="form-control" disabled="disabled" id="employee" name="employee"
+                                   value="{{ employee.first_name }} {{ employee.last_name }}">
+                        </div>
+                    </div>
+                </div>
+                <input type="submit" class="btn btn-primary" value="Submit">
+            </fieldset>
+        </form>
+
+    </div>
+
+{% endblock %}

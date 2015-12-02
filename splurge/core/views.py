@@ -179,7 +179,6 @@ def add_employee(request):
 
         }))
     else:
-        print request.POST
         e = Employee(
             first_name=request.POST.get("firstName"),
             last_name=request.POST.get("lastName"),
@@ -201,7 +200,20 @@ def delete_employee(request, employee_id):
 
 @login_required
 def create_card_for_employee(request, employee_id):
-    pass
+    employee_obj = Employee.objects.get(pk=int(employee_id))
+    if request.method == 'GET':
+        return render_to_response("card_to_specific_employee.html", RequestContext(request, {
+            "employee": employee_obj
+        }))
+    else:
+        amount = request.POST.get("amount")
+        gc = GiftCard(
+            amount=amount,
+            to=employee_obj,
+            given_by=request.user
+        )
+        gc.save()
+        return redirect('cards')
 
 
 @login_required
