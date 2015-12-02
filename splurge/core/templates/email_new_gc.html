@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0, minimal-ui" id="viewport"/>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="UTF-8">
+    <title>You have received a new gift card</title>
+</head>
+<body>
+<div style="display: block">
+    <h1>Hello {{ employee.first_name }}!</h1>
+</div>
+<div style="display: block;margin-top: 50px">
+    <h4>{{ appuser.first_name }} {{ appuser.last_name }} has sent you a Splurge card!</h4>
+</div>
+<div style="display: block;margin-top: 50px">
+    <p>This splurge card is worth <span style="text-decoration: underline;font-size: 42px">${{ card.amount }}</span></p>
+    <p>You have to redeem the gift card before <span style="font-size: 32px">{{ card.expiry_timestamp }}</span></p>
+    <p>You can redeem this card by replying to this email with the receipt of the following stores:</p>
+    {% for store in card.category.sites.all %}
+        <p>    {{ store.site_name }}</p>
+    {% endfor %}
+</div>
+</body>
+</html>

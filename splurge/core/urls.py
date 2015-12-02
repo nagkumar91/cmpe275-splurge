@@ -17,5 +17,6 @@ urlpatterns = patterns('core.views',
                        url(r'^create_card_for_team/(?P<team_id>[\-\w]+)$', 'create_card_for_team',
                            name="create_card_for_team"),
                        url(r'^activate_user/(?P<unique_id>[\-\w]+)/$', 'activate_user', name='activate_user'),
+                       url(r'^email_preview/(?P<template_name>[\-\w]+)/$', 'email_preview', name='email_preview'),
                        url(r'^$', 'home', name='home'),
                        )

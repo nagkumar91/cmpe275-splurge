@@ -168,7 +168,7 @@ def send_card_to_employee(request):
         employee = request.POST.get("employees")
         amount = request.POST.get("amount")
         category = request.POST.get("category")
-        category_obj = GiftCardCategory.objects.get(pk=int(category))
+        category_obj = GiftCardCategory.objects.get(pk=category)
         gc = GiftCard(
             amount=amount,
             to=Employee.objects.get(pk=(int(employee))),
@@ -192,7 +192,7 @@ def send_card_to_a_team(request):
         team = request.POST.get("teams")
         amount = request.POST.get("amount")
         category = request.POST.get("category")
-        category_obj = GiftCardCategory.objects.get(pk=int(category))
+        category_obj = GiftCardCategory.objects.get(pk=category)
         team_obj = Team.objects.get(pk=int(team))
         for u in team_obj.employees.all():
             gc = GiftCard(
@@ -217,7 +217,7 @@ def create_card_for_employee(request, employee_id):
     else:
         amount = request.POST.get("amount")
         category = request.POST.get("category")
-        category_obj = GiftCardCategory.objects.get(pk=int(category))
+        category_obj = GiftCardCategory.objects.get(pk=category)
         gc = GiftCard(
             amount=amount,
             to=employee_obj,
@@ -240,7 +240,7 @@ def create_card_for_team(request, team_id):
     else:
         amount = request.POST.get("amount")
         category = request.POST.get("category")
-        category_obj = GiftCardCategory.objects.get(pk=int(category))
+        category_obj = GiftCardCategory.objects.get(pk=category)
         for e in team_obj.employees.all():
             gc = GiftCard(
                 amount=amount,
@@ -250,3 +250,16 @@ def create_card_for_team(request, team_id):
             )
             gc.save()
         return redirect('cards')
+
+
+def email_preview(reqeust, template_name):
+    template_name = "%s.html" % template_name
+    print template_name
+    employee = Employee.objects.all()[0]
+    app_user = employee.app_user
+    card = GiftCard.objects.all()[0]
+    return render_to_response(template_name, RequestContext(reqeust, {
+        "employee": employee,
+        "appuser": app_user,
+        "card": card
+    }))
