@@ -91,13 +91,14 @@ class GiftCard(TimeStampedModel):
         return "%s %s" % (self.amount, self.given_by)
 
     def save(self, *args, **kwargs):
-        if not self.email_notification:
-            gift_card.delay(self.given_by, self.to, self)
-            self.email_notification = True
         if not self.unique_code:
             self.unique_code = get_random_string(25)
 
         if not self.expired:
             if not self.expiry_timestamp:
                 self.expiry_timestamp = self.created + datetime.timedelta(days=2)
+        if not self.email_notification:
+            gift_card.delay(self.given_by, self.to, self)
+            self.email_notification = True
+
         super(GiftCard, self).save(*args, **kwargs)
