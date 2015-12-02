@@ -4,8 +4,7 @@ from django.shortcuts import render, render_to_response, redirect
 from django.template import RequestContext
 from django.contrib.auth import login as auth_login, authenticate
 from django.http.request import QueryDict
-
-from .models import AppUser, Employee, Team, GiftCard
+from .models import AppUser, Employee, Team, GiftCard, GiftCardCategory
 from .tasks import activation_mail_queue
 
 
@@ -101,56 +100,6 @@ def employees(request):
 
 
 @login_required
-def cards(request):
-    gift_cards = request.user.gift_cards.all()
-    return render_to_response("gift_card.html", RequestContext(request, {
-        "gift_cards": gift_cards
-    }))
-
-
-@login_required
-def send_card_to_employee(request):
-    if request.method == 'GET':
-        employees = request.user.employees.all()
-        print employees
-        return render_to_response("add_card_to_employee.html", RequestContext(request, {
-            "employees": employees
-        }))
-    else:
-        employee = request.POST.get("employees")
-        amount = request.POST.get("amount")
-        gc = GiftCard(
-            amount=amount,
-            to=Employee.objects.get(pk=(int(employee))),
-            given_by=request.user
-        )
-        gc.save()
-        return redirect('cards')
-
-
-@login_required
-def send_card_to_a_team(request):
-    if request.method == 'GET':
-        teams = request.user.teams.all()
-        print teams
-        return render_to_response("add_card_to_team.html", RequestContext(request, {
-            "teams": teams
-        }))
-    else:
-        team = request.POST.get("teams")
-        amount = request.POST.get("amount")
-        team_obj = Team.objects.get(pk=int(team))
-        for u in team_obj.employees.all():
-            gc = GiftCard(
-                amount=amount,
-                to=u,
-                given_by=request.user
-            )
-            gc.save()
-        return redirect('cards')
-
-
-@login_required
 def create_team(request):
     if request.method == 'GET':
         employees = request.user.employees.all()
@@ -199,18 +148,81 @@ def delete_employee(request, employee_id):
 
 
 @login_required
+def cards(request):
+    gift_cards = request.user.gift_cards.all()
+    return render_to_response("gift_card.html", RequestContext(request, {
+        "gift_cards": gift_cards
+    }))
+
+
+@login_required
+def send_card_to_employee(request):
+    if request.method == 'GET':
+        employees = request.user.employees.all()
+        categories = GiftCardCategory.objects.all()
+        return render_to_response("add_card_to_employee.html", RequestContext(request, {
+            "employees": employees,
+            "categories": categories
+        }))
+    else:
+        employee = request.POST.get("employees")
+        amount = request.POST.get("amount")
+        category = request.POST.get("category")
+        category_obj = GiftCardCategory.objects.get(pk=int(category))
+        gc = GiftCard(
+            amount=amount,
+            to=Employee.objects.get(pk=(int(employee))),
+            given_by=request.user,
+            category=category_obj
+        )
+        gc.save()
+        return redirect('cards')
+
+
+@login_required
+def send_card_to_a_team(request):
+    if request.method == 'GET':
+        teams = request.user.teams.all()
+        categories = GiftCardCategory.objects.all()
+        return render_to_response("add_card_to_team.html", RequestContext(request, {
+            "teams": teams,
+            "categories": categories
+        }))
+    else:
+        team = request.POST.get("teams")
+        amount = request.POST.get("amount")
+        category = request.POST.get("category")
+        category_obj = GiftCardCategory.objects.get(pk=int(category))
+        team_obj = Team.objects.get(pk=int(team))
+        for u in team_obj.employees.all():
+            gc = GiftCard(
+                amount=amount,
+                to=u,
+                given_by=request.user,
+                category=category_obj
+            )
+            gc.save()
+        return redirect('cards')
+
+
+@login_required
 def create_card_for_employee(request, employee_id):
     employee_obj = Employee.objects.get(pk=int(employee_id))
+    categories = GiftCardCategory.objects.all()
     if request.method == 'GET':
         return render_to_response("card_to_specific_employee.html", RequestContext(request, {
-            "employee": employee_obj
+            "employee": employee_obj,
+            "categories": categories
         }))
     else:
         amount = request.POST.get("amount")
+        category = request.POST.get("category")
+        category_obj = GiftCardCategory.objects.get(pk=int(category))
         gc = GiftCard(
             amount=amount,
             to=employee_obj,
-            given_by=request.user
+            given_by=request.user,
+            category=category_obj
         )
         gc.save()
         return redirect('cards')
@@ -219,17 +231,22 @@ def create_card_for_employee(request, employee_id):
 @login_required
 def create_card_for_team(request, team_id):
     team_obj = Team.objects.get(pk=int(team_id))
+    categories = GiftCardCategory.objects.all()
     if request.method == 'GET':
         return render_to_response("card_to_specific_team.html", RequestContext(request, {
-            "team": team_obj
+            "team": team_obj,
+            "categories": categories
         }))
     else:
         amount = request.POST.get("amount")
+        category = request.POST.get("category")
+        category_obj = GiftCardCategory.objects.get(pk=int(category))
         for e in team_obj.employees.all():
             gc = GiftCard(
                 amount=amount,
                 to=e,
-                given_by=request.user
+                given_by=request.user,
+                category=category_obj
             )
             gc.save()
         return redirect('cards')

@@ -37,6 +37,21 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="row">
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="category">Category</label>
+                        <div class="col-md-5">
+                            <select name="category" id="category" style="width: 100%;">
+                                <option></option>
+                                {% for c in categories %}
+                                    <option value="{{ c.pk }}">{{ c.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
                 <input type="submit" class="btn btn-primary" value="Submit">
             </fieldset>
         </form>
@@ -48,5 +63,6 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.1/js/select2.min.js"></script>
     <script>
         $('#employees').select2();
+        $('#category').select2();
     </script>
 {% endblock %}

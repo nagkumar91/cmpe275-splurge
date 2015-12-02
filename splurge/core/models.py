@@ -49,13 +49,36 @@ class Team(TimeStampedModel):
         return "%s - %s" % (self.name, self.app_user.organisation_name)
 
 
+class GiftCardRedeemableSite(models.Model):
+    site_name = models.CharField(max_length=1024, unique=True)
+
+    def __unicode__(self):
+        return self.site_name
+
+
+class GiftCardCategory(models.Model):
+    name = models.CharField(max_length=25, unique=True, primary_key=True)
+    sites = models.ManyToManyField(GiftCardRedeemableSite, related_name='categories')
+
+    class Meta:
+        verbose_name = 'Gift Card Category'
+        verbose_name_plural = 'Gift Card Categories'
+
+    def __unicode__(self):
+        return self.name
+
+
 class GiftCard(TimeStampedModel):
+    unique_code = models.CharField(max_length=25, primary_key=True)
     amount = models.IntegerField(default=0)
     given_by = models.ForeignKey(AppUser, related_name='gift_cards')
     to = models.ForeignKey(Employee, related_name='gift_cards')
+    email_notification = models.BooleanField(default=False)
+    expiry_reminder = models.BooleanField(default=False)
     expired = models.BooleanField(default=False)
     claimed = models.BooleanField(default=False)
     expiry_timestamp = models.DateTimeField(null=True, blank=True)
+    category = models.ForeignKey(GiftCardCategory, related_name='gift_cards')
 
     class Meta:
         verbose_name = 'Gift Card'
@@ -65,6 +88,9 @@ class GiftCard(TimeStampedModel):
         return "%s %s" % (self.amount, self.given_by)
 
     def save(self, *args, **kwargs):
+        if not self.unique_code:
+            self.unique_code = get_random_string(25)
+
         if not self.expired:
             if not self.expiry_timestamp:
                 self.expiry_timestamp = self.created + datetime.timedelta(days=2)

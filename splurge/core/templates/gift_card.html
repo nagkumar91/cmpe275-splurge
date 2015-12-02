@@ -16,6 +16,7 @@
             <thead>
             <tr>
                 <th>Employee Name</th>
+                <th>Value</th>
                 <th>Status</th>
                 <th>Expires(d) on</th>
             </tr>
@@ -24,6 +25,7 @@
             {% for gc in gift_cards %}
                 <tr>
                     <td>{{ gc.to.first_name }} {{ gc.to.last_name }}</td>
+                    <td>{{ gc.amount }}</td>
                     <td>
                         {% if gc.expired %}
                             Expired
