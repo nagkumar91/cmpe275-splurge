@@ -111,6 +111,7 @@ LOGOUT_URL = '/logout/'
 import djcelery
 from celery.schedules import crontab
 djcelery.setup_loader()
+'''
 from datetime import timedelta
 CELERYBEAT_SCHEDULE = {
     'check-for-a-day-before-expiring':  {
@@ -122,6 +123,7 @@ CELERYBEAT_SCHEDULE = {
         'schedule': timedelta(minutes=5)
     }
 }
+'''
 
 BROKER_URL = "amqp://admin:admin@localhost:5672/default"
 CELERY_RESULT_BACKEND='djcelery.backends.database:DatabaseBackend'

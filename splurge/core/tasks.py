@@ -31,6 +31,7 @@ def gift_card(app_user, employee, gift_card):
     subject = "Splurge %s" % gift_card.unique_code
     send_complex_message(employee.email_id, subject, html)
 
+'''
 from .models import GiftCard
 
 @shared_task
@@ -85,3 +86,4 @@ def check_for_expired_cards(self, *args, **kwargs):
         gc.given_by.balance += 0.75*gc.amount
         gc.save()
         _send_complex_message.delay(gc.given_by.email, subject, html)
+'''
