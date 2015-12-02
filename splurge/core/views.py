@@ -1,11 +1,17 @@
+import json
+
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
+from django.http import JsonResponse
 from django.shortcuts import render, render_to_response, redirect
 from django.template import RequestContext
 from django.contrib.auth import login as auth_login, authenticate
 from django.http.request import QueryDict
+from django.template.context_processors import csrf
+from django.views.decorators.csrf import csrf_exempt
+
 from .models import AppUser, Employee, Team, GiftCard, GiftCardCategory
-from .tasks import activation_mail_queue
+from .tasks import activation_mail_queue, fetch_mail_from_context_io
 
 
 def home(request):
@@ -252,15 +258,26 @@ def create_card_for_team(request, team_id):
         return redirect('cards')
 
 
-def email_preview(reqeust, template_name):
+def email_preview(request, template_name):
     template_name = "%s.html" % template_name
     print template_name
     employee = Employee.objects.all()[0]
     app_user = employee.app_user
     card = GiftCard.objects.all()[0]
-    return render_to_response(template_name, RequestContext(reqeust, {
+    return render_to_response(template_name, RequestContext(request, {
         "employee": employee,
         "appuser": app_user,
         "card": card,
         "returned_amount": (0.75*card.amount)
     }))
+
+
+@csrf_exempt
+def email_callback(request):
+    fetch_mail_from_context_io.delay()
+    return JsonResponse(json.dumps({"done": True}), content_type="application/json", safe=False)
+
+
+@csrf_exempt
+def email_failure(request):
+    print "email fail called"

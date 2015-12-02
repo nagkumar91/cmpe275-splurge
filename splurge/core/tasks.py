@@ -85,3 +85,8 @@ def check_for_expired_cards(self, *args, **kwargs):
         gc.given_by.balance += 0.75*gc.amount
         gc.save()
         _send_complex_message.delay(gc.given_by.email, subject, html)
+
+
+@shared_task
+def fetch_mail_from_context_io():
+    print "received an email with subject. So fetch from context.io and mark the card as used"
