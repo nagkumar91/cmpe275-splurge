@@ -1,11 +1,12 @@
 from celery import Celery, shared_task
 import requests
 from django.conf import settings
+from django.core.exceptions import ObjectDoesNotExist
 from django.template import Context
 from django.template.loader import get_template
 import datetime
 from django.utils import timezone
-from .helpers import send_email, send_complex_message
+from .helpers import send_email, send_complex_message, send_claimed_email_to_employer
 
 app = Celery('core')
 app.config_from_object('django.conf:settings')
@@ -31,7 +32,9 @@ def gift_card(app_user, employee, gift_card):
     subject = "Splurge %s" % gift_card.unique_code
     send_complex_message(employee.email_id, subject, html)
 
+
 from .models import GiftCard
+
 
 @shared_task
 def _send_complex_message(to, subject, body):
@@ -80,9 +83,9 @@ def check_for_expired_cards(self, *args, **kwargs):
             "employee": gc.to,
             "appuser": gc.given_by,
             "card": gc,
-            "returned_amount": (0.75*gc.amount)
+            "returned_amount": (0.75 * gc.amount)
         }))
-        gc.given_by.balance += 0.75*gc.amount
+        gc.given_by.balance += 0.75 * gc.amount
         gc.save()
         _send_complex_message.delay(gc.given_by.email, subject, html)
 
@@ -90,3 +93,20 @@ def check_for_expired_cards(self, *args, **kwargs):
 @shared_task
 def fetch_mail_from_context_io():
     print "received an email with subject. So fetch from context.io and mark the card as used"
+    url = "https://api.context.io/2.0/accounts/%s/messages?include_body=1&subject=%2FSplurge%2A%2F" % settings.CONTEXT_IO_ACCOUNT_ID
+    r = requests.get(url)
+    if r.status_code == '200':
+        now = datetime.datetime.now()
+        lim = now - datetime.timedelta(minutes=30)
+        for m in r.json():
+            m_date = datetime.datetime.fromtimestamp(int(m['date_received']))
+            if (now > m_date) and (lim < m_date):
+                subj = m['subject']
+                subj = subj.replace("Splurge ", "")
+                try:
+                    splurge_card = GiftCard.objects.get(unique_code=subj)
+                    splurge_card.claimed = True
+                    send_claimed_email_to_employer(splurge_card)
+                    send_claimed_email_to_employee(splurge_card)
+                except ObjectDoesNotExist:
+                    pass

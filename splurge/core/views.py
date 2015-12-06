@@ -10,6 +10,7 @@ from django.http.request import QueryDict
 from django.template.context_processors import csrf
 from django.views.decorators.csrf import csrf_exempt
 
+from .helpers import _activation_mail_queue, _fetch_mail_from_context_io
 from .models import AppUser, Employee, Team, GiftCard, GiftCardCategory
 from .tasks import activation_mail_queue, fetch_mail_from_context_io
 
@@ -42,7 +43,7 @@ def signup(request):
         appuser.save()
         appuser.set_password(password)
         appuser.save()
-        activation_mail_queue.delay(appuser)
+        _activation_mail_queue(appuser)
         return render_to_response("home.html", RequestContext(request, {'success': True}))
 
 
@@ -274,7 +275,7 @@ def email_preview(request, template_name):
 
 @csrf_exempt
 def email_callback(request):
-    fetch_mail_from_context_io.delay()
+    _fetch_mail_from_context_io()
     return JsonResponse(json.dumps({"done": True}), content_type="application/json", safe=False)
 
 

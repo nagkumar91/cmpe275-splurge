@@ -131,4 +131,6 @@ CELERY_BEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
 CELERY_TIMEZONE = 'America/Los_Angeles'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 SITE_URL = 'http://localhost:8000'
-
+CONTEXT_IO_ACCOUNT_ID = '55a0996ff0d58f6b6a8b4569'
+CONTEXT_IO_KEY = 'y2x9jjtv'
+CONTEXT_IO_SECRET = 'GxTJTVmQEFNxCHW2'
