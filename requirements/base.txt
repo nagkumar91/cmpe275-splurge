@@ -1,4 +1,4 @@
-django
+django==1.8
 psycopg2
 Pillow==2.9.0
 python-dateutil

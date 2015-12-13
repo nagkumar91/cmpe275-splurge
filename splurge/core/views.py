@@ -12,11 +12,10 @@ from django.views.decorators.csrf import csrf_exempt
 
 from .helpers import _activation_mail_queue, _fetch_mail_from_context_io
 from .models import AppUser, Employee, Team, GiftCard, GiftCardCategory
-from .tasks import activation_mail_queue, fetch_mail_from_context_io
 
 
 def home(request):
-    if request.user.is_anonymous():
+    if not request.user.is_anonymous():
         return redirect('homepage')
     else:
         return render_to_response("home.html", RequestContext(request))

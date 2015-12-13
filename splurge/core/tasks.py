@@ -6,11 +6,69 @@ from django.template import Context
 from django.template.loader import get_template
 import datetime
 from django.utils import timezone
-from .helpers import send_email, send_complex_message, send_claimed_email_to_employer
+
+# from .helpers import send_email, send_complex_message, send_claimed_email_to_employer
 
 app = Celery('core')
 app.config_from_object('django.conf:settings')
 app.autodiscover_tasks(lambda: settings.INSTALLED_APPS)
+
+
+def send_email(to, subject, body, from_id):
+    requests.post(
+        settings.MAILGUN_API_URL,
+        auth=("api", settings.MAILGUN_SECRET_KEY),
+        data={"from": from_id,
+              "to": [to],
+              "subject": subject,
+              "text": body})
+
+
+def send_complex_message(to, subject, body):
+    return requests.post(
+        settings.MAILGUN_API_URL,
+        auth=("api", settings.MAILGUN_SECRET_KEY),
+        data={"from": "Splurge <nagkumar91@gmail.com>",
+              "to": to,
+              "subject": subject,
+              # "text": "Testing some Mailgun awesomness!",
+              "html": body})
+
+
+def send_claimed_email_to_employer(splurge_card):
+    to = splurge_card.given_by.email
+    subject = "Splurge card claimed"
+    html = get_template("email_redeemed_gc.html").render(Context({
+        "employee": splurge_card.to,
+        "appuser": splurge_card.given_by,
+        "card": splurge_card
+    }))
+    return requests.post(
+        settings.MAILGUN_API_URL,
+        auth=("api", settings.MAILGUN_SECRET_KEY),
+        data={"from": "Splurge <nagkumar91@gmail.com>",
+              "to": to,
+              "subject": subject,
+              # "text": "Testing some Mailgun awesomness!",
+              "html": html})
+
+
+def send_claimed_email_to_employee(splurge_card):
+    to = splurge_card.to.email_id
+    subject = "Splurge card claimed"
+    html = get_template("email_claim_successful.html").render(Context({
+        "employee": splurge_card.to,
+        "appuser": splurge_card.given_by,
+        "card": splurge_card
+    }))
+    return requests.post(
+        settings.MAILGUN_API_URL,
+        auth=("api", settings.MAILGUN_SECRET_KEY),
+        data={"from": "Splurge <nagkumar91@gmail.com>",
+              "to": to,
+              "subject": subject,
+              # "text": "Testing some Mailgun awesomness!",
+              "html": html})
 
 
 @shared_task
